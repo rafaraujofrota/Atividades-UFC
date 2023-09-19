@@ -32,7 +32,7 @@ public class CachorroQuente {
 	}
 	
 	public String[] PegarAdicionais() {
-		if(this.adicionais.length <= 0) return null;
+		if(this.adicionais == null || this.adicionais.length <= 0) return null;
 		
 		String[] adicionaisTexto = new String[this.adicionais.length];
 		for(int i = 0; i < this.adicionais.length; i++) {

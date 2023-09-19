@@ -73,7 +73,7 @@ public class Main {
 			
 			MostrarOpcoes("Escolha os adicionais", adicionais);
 			System.out.println("Digite a quantidade de Adicionais, Max: " + adicionais.length);
-			int quantidadeAdicionais = ValidarOpcao(ScanearInt(), adicionais.length);
+			int quantidadeAdicionais = ValidarOpcao(ScanearInt(), adicionais.length + 1);
 			
 			Enum<CachorroQuente.adicionais>[] adicionaisEscolhidos = new Enum[quantidadeAdicionais];
 			

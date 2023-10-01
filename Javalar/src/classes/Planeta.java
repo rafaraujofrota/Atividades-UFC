@@ -12,6 +12,7 @@ public class Planeta extends Astro {
 	
 	// distancia é o lado do quadrado que o planeta fará no seu movimento
 	private int distancia;
+	private int movimentosVolta;
 	public String descricao;
 	private String nome;
 	
@@ -33,8 +34,13 @@ public class Planeta extends Astro {
 		return this.rotacao;
 	}
 	
+	public int pegarMovimentosVolta() {
+		return this.movimentosVolta;
+	}
+	
 	public void definirDistancia(int distancia) {
 		this.distancia = distancia; 
+		this.movimentosVolta = (distancia * 2) + (2 * (distancia - 2));
 	}
 	
 	public void definirInicio(Vetor vet) {
@@ -53,7 +59,6 @@ public class Planeta extends Astro {
 		
 		// t * vel é quantidade de casas que ele anda
 		// checar se deu alguma volta para deixar o programa mais rápido
-		int movimentosVolta = (distancia * 2) + (2 * (distancia - 2));
 		int movimento = (tempo * velocidade) % (movimentosVolta);
 		
 		// Pega o y do lado de cima e baixo, e o x do lado esquerdo e direito;
@@ -76,10 +81,7 @@ public class Planeta extends Astro {
 				if(x == cantos[3]) y--;
 				else x++;
 			}
-			else if(x == cantos[3]) {
-				if(y == cantos[0]) x--;
-				else y--;
-			}
+			else y--;
 		}
 		
 		return new Vetor(x, y);

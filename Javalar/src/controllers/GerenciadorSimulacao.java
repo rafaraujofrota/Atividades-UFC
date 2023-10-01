@@ -11,6 +11,12 @@ public class GerenciadorSimulacao {
 	private Planeta[] planetasAtivos;
 	private Plano plano;
 	
+	// Dados sobre os planetas
+	private int[] distanciaPercorrida;
+	private int[] tempoSobrevivido;
+	private int[] colisoesGlitchs;
+	private int[] colisoesDevs;
+	
 	private int unidadesTotais;
 	private int numeroExecucoes;
 	
@@ -28,8 +34,27 @@ public class GerenciadorSimulacao {
 		return numeroExecucoes;
 	}
 	
+	public int[] PegarColisoesDevs() {
+		return colisoesDevs;
+	}
+	
+	public int[] PegarColisoesGlitchs() {
+		return colisoesGlitchs;
+	}
+	
 	public Planeta[] PegarPlanetasAtivos() {
 		return planetasAtivos;
+	}
+	
+	public int[] PegarVelocidadesMedia() {
+		int[] velocidades = new int[planetasAtivos.length];
+		
+		for(int i = 0; i < velocidades.length; i++) {
+			int tempo = tempoSobrevivido[i];
+			velocidades[i] = tempo > 0 ? distanciaPercorrida[i] / tempo : 0;
+		}
+		
+		return velocidades;
 	}
 	
 	public void DefinirPlanetas(Planeta[] lista) {
@@ -51,6 +76,11 @@ public class GerenciadorSimulacao {
 			}
 			
 			planetasAtivos = lista; 
+			
+			colisoesDevs = new int[lista.length];
+			colisoesGlitchs = new int[lista.length];
+			tempoSobrevivido = new int[lista.length];
+			distanciaPercorrida = new int[lista.length];
 		}
 	}
 	
@@ -65,8 +95,15 @@ public class GerenciadorSimulacao {
 		
 		if(tempo == 0) return;
 		
-		for(Planeta p : planetasAtivos) {
+		for(int i = 0; i < planetasAtivos.length; i++) {
+			Planeta p = planetasAtivos[i];
+			
 			if(p == null || p.velocidade <= 0) continue;
+			
+			// Atualizar Dados
+				distanciaPercorrida[i] += (p.velocidade * tempo);
+				tempoSobrevivido[i] += tempo;
+			//
 			
 			plano.Remover(p.pegarPosicao());
 			Vetor novaPosicao = p.PegarProximaPosicao(tempo);
@@ -74,8 +111,15 @@ public class GerenciadorSimulacao {
 			
 			if(AstroVelho != null) {
 				Enum<Astro.categorias> tipo = AstroVelho.pegarTipo();
-				if(tipo == Astro.categorias.DEV) p.velocidade++;
-				if(tipo == Astro.categorias.GLITCH) p.velocidade--;
+				
+				if(tipo == Astro.categorias.DEV) {
+					p.velocidade++;
+					colisoesDevs[i] += 1;
+				};
+				if(tipo == Astro.categorias.GLITCH) {
+					p.velocidade--;
+					colisoesGlitchs[i] += 1;
+				}
 				
 				System.out.println(p.pegarNome() + " Teve a velocidade alterada para " + p.velocidade);
 			}

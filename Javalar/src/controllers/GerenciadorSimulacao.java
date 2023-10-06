@@ -11,12 +11,6 @@ public class GerenciadorSimulacao {
 	private Planeta[] planetasAtivos;
 	private Plano plano;
 	
-	// Dados sobre os planetas
-	private int[] distanciaPercorrida;
-	private int[] tempoSobrevivido;
-	private int[] colisoesGlitchs;
-	private int[] colisoesDevs;
-	
 	private int unidadesTotais;
 	private int numeroExecucoes;
 	
@@ -34,34 +28,15 @@ public class GerenciadorSimulacao {
 		return numeroExecucoes;
 	}
 	
-	public int[] PegarColisoesDevs() {
-		return colisoesDevs;
-	}
-	
-	public int[] PegarColisoesGlitchs() {
-		return colisoesGlitchs;
-	}
-	
 	public Planeta[] PegarPlanetasAtivos() {
 		return planetasAtivos;
 	}
 	
-	public int[] PegarVelocidadesMedia() {
-		int[] velocidades = new int[planetasAtivos.length];
-		
-		for(int i = 0; i < velocidades.length; i++) {
-			int tempo = tempoSobrevivido[i];
-			velocidades[i] = tempo > 0 ? distanciaPercorrida[i] / tempo : 0;
-		}
-		
-		return velocidades;
-	}
-	
-	public void DefinirPlanetas(Planeta[] lista) {
+	public void DefinirPlanetas(Planeta[] lista) throws Exception {
 		int espacos = plano.PegarCentro();
 		
 		if(lista.length > espacos || lista == null) {
-			System.out.println("Tem mais planetas que deveria ou eh nulo. Max: " + espacos);
+			throw new Exception("Tem mais planetas que deveria ou eh nulo. Max: " + espacos);
 		} else {
 			int centro = plano.PegarCentro();
 			int y = centro;
@@ -76,11 +51,6 @@ public class GerenciadorSimulacao {
 			}
 			
 			planetasAtivos = lista; 
-			
-			colisoesDevs = new int[lista.length];
-			colisoesGlitchs = new int[lista.length];
-			tempoSobrevivido = new int[lista.length];
-			distanciaPercorrida = new int[lista.length];
 		}
 	}
 	
@@ -95,14 +65,15 @@ public class GerenciadorSimulacao {
 		
 		if(tempo == 0) return;
 		
-		for(int i = 0; i < planetasAtivos.length; i++) {
-			Planeta p = planetasAtivos[i];
-			
+		for(Planeta p: planetasAtivos) {
 			if(p == null || p.velocidade <= 0) continue;
 			
 			// Atualizar Dados
-				distanciaPercorrida[i] += (p.velocidade * tempo);
-				tempoSobrevivido[i] += tempo;
+				p.distanciaPercorrida += (p.velocidade * tempo);
+				p.tempoSobrevivido += tempo;
+				
+				if(p.tempoSobrevivido <= 0) p.velocidadeMedia = 0;
+				else p.velocidadeMedia = (double) p.distanciaPercorrida / p.tempoSobrevivido;
 			//
 			
 			plano.Remover(p.pegarPosicao());
@@ -114,18 +85,18 @@ public class GerenciadorSimulacao {
 				
 				if(tipo == Astro.categorias.DEV) {
 					p.velocidade++;
-					colisoesDevs[i] += 1;
+					p.colisoes[0] += 1;
 				};
 				if(tipo == Astro.categorias.GLITCH) {
 					p.velocidade--;
-					colisoesGlitchs[i] += 1;
+					p.colisoes[1] += 1;
 				}
 				
 				System.out.println(p.pegarNome() + " Teve a velocidade alterada para " + p.velocidade);
 			}
 			
 			if(p.velocidade <= 0) {
-				System.out.println(p.pegarNome() + " Foi jogar no Vasco");
+				System.out.println(p.pegarNome() + " Faliu");
 				plano.Remover(novaPosicao);
 			} else {
 				p.definirPosicao(novaPosicao);

@@ -16,6 +16,12 @@ public class Planeta extends Astro {
 	public String descricao;
 	private String nome;
 	
+	// Atributos da simulação
+	public double velocidadeMedia;
+	public int distanciaPercorrida;
+	public int tempoSobrevivido;
+	public int[] colisoes;
+	
 	public Planeta(String nome, char icone, int velocidade, double rotacao, String descricao) {
 		super(Astro.categorias.PLANETA, icone);
 		
@@ -24,6 +30,9 @@ public class Planeta extends Astro {
 		this.rotacao = rotacao;
 		this.nome = nome;
 		this.descricao = descricao;
+		
+		// 0 = colisoesDev, 1 = colisoesGlitch
+		this.colisoes = new int[2];
 	}
 	
 	public String pegarNome() {
@@ -39,8 +48,8 @@ public class Planeta extends Astro {
 	}
 	
 	public void definirDistancia(int distancia) {
-		this.distancia = distancia; 
-		this.movimentosVolta = (distancia * 2) + (2 * (distancia - 2));
+		this.distancia = Math.abs(distancia); 
+		this.movimentosVolta = (this.distancia * 2) + (2 * (this.distancia - 2));
 	}
 	
 	public void definirInicio(Vetor vet) {
@@ -57,7 +66,6 @@ public class Planeta extends Astro {
 		// Distancia do centro até um canto;
 		int dCentro = (distancia - 1) / 2;
 		
-		// t * vel é quantidade de casas que ele anda
 		// checar se deu alguma volta para deixar o programa mais rápido
 		int movimento = (tempo * velocidade) % (movimentosVolta);
 		

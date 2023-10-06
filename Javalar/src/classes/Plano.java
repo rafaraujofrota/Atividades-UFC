@@ -9,7 +9,8 @@ public class Plano {
 	private int centro;
 	private int tamanho;
 	
-	public Plano(int quantidadeDePlanetas) {
+	public Plano(int quantidadeDePlanetas) throws Exception {
+		if(quantidadeDePlanetas < 1) throw new Exception("Valor mínimo é 1");
 		// O Mais 1 é para poder botar a Estrela
 		int tamanho = (quantidadeDePlanetas * 2) + 1;
 		this.tamanho = tamanho;

@@ -3,12 +3,12 @@ import java.util.Scanner;
 import classes.Planeta;
 import classes.Plano;
 import controllers.GerenciadorSimulacao;
-import controllers.Observador;
+import utils.Observador;
 
 public class Javalar {
 	public static Scanner Entrada = new Scanner(System.in);
 	
-	public static void criarPlanetas(GerenciadorSimulacao controle) {
+	public static void criarPlanetas(GerenciadorSimulacao controle) throws Exception {
 		Planeta[] lista = new Planeta[7];
 		
 		// Definindo os dados básicos dos planetas de acordo com a ordem
@@ -24,7 +24,7 @@ public class Javalar {
 		controle.DefinirPlanetas(lista);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {	
 		Plano Simulacao = new Plano(7);
 		GerenciadorSimulacao Gerenciador = new GerenciadorSimulacao(Simulacao);
 		criarPlanetas(Gerenciador);
@@ -47,24 +47,30 @@ public class Javalar {
 			int opcao = Entrada.nextInt();
 			
 			if(opcao == 1) {
+				
 				System.out.println("Diga quanto tempo quer passar: ");
 				int tempo = Entrada.nextInt();
 				
 				Dados.imprimirHoras(tempo, true);
 				Gerenciador.PassaTempo(tempo);
+				
 			} else if(opcao == 2) {
+				
 				System.out.println("Diga quantos Glitchs: ");
 				int nGlitchs = Entrada.nextInt();
 				System.out.println("Diga quantos Devs: ");
 				int nDevs = Entrada.nextInt();
 				
 				Gerenciador.AdicionarAstro(nGlitchs, nDevs);
+				
 			} else if(opcao == 3) {
+				
 				boolean estaAlinhado = Dados.estaAlinhado(Simulacao.PegarCentro());
-				Dados.imprimirVelocidade();
+				Dados.imprimirVelocidade(false, true);
 				Dados.imprimirDistancias();
 				Dados.imprimirHemisferio(Simulacao.PegarCentro());
 				System.out.println("\nEstao Alinhados? " + (estaAlinhado ? "Sim" : "Nao"));
+				
 			} else acabou = true;
 			
 			System.out.println(acabou ? "\nDados Finais" : "\nImagem Atual");
@@ -72,7 +78,9 @@ public class Javalar {
 			System.out.println();
 		}
 		
-		// Imprimir o relatório final 
+		System.out.println("Unidades Totais: " + Gerenciador.PegarUnidadesTotais());
+		System.out.println("Instantes Solicitados: " + Gerenciador.PegarNumeroExecucoes());
+		Dados.imprimirRelatorioFinal();
 	}
 
 }

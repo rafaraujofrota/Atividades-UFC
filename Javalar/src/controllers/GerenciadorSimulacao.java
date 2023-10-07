@@ -36,7 +36,7 @@ public class GerenciadorSimulacao {
 		int espacos = plano.PegarCentro();
 		
 		if(lista.length > espacos || lista == null) {
-			throw new Exception("Tem mais planetas que deveria ou eh nulo. Max: " + espacos);
+			throw new Exception("Tem mais planetas que deveria ou é nulo. Max: " + espacos);
 		} else {
 			int centro = plano.PegarCentro();
 			int y = centro;
@@ -56,7 +56,7 @@ public class GerenciadorSimulacao {
 	
 	public void PassaTempo(int tempo) {
 		if(tempo < 0) {
-			System.out.println("Tempo tem que ser maior ou igual 0");
+			System.out.println("Tempo tem que ser maior ou igual a 0");
 			return;
 		}
 		
@@ -108,7 +108,7 @@ public class GerenciadorSimulacao {
 	
 	public void AdicionarAstro(int nGlitchs, int nDevs) {
 		if(nGlitchs < 0 || nDevs < 0) {
-			System.out.println("NÃ£o Ã© possÃ­vel adicionar quantidade negativa");
+			System.out.println("Não é possível adicionar quantidade negativa");
 			return;
 		}
 
@@ -124,7 +124,7 @@ public class GerenciadorSimulacao {
 			Glitch.definirPosicao(vet);
 			plano.Adicionar(Glitch);
 			
-			System.out.println("GLITCH CRIADO NA POSICAO " + vet.PegarTextoVetor());
+			System.out.println("GLITCH CRIADO NA POSIÇÃO " + vet.PegarTextoVetor());
 		}
 		
 		for(int i = 0; i < nDevs; i++) {
@@ -136,7 +136,7 @@ public class GerenciadorSimulacao {
 			Dev.definirPosicao(vet);
 			plano.Adicionar(Dev);
 			
-			System.out.println("DEV CRIADO NA POSICAO " + vet.PegarTextoVetor());
+			System.out.println("DEV CRIADO NA POSIÇÃO " + vet.PegarTextoVetor());
 		}
 	}
 }

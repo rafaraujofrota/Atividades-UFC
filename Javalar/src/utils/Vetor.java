@@ -29,7 +29,7 @@ public class Vetor {
 	}
 	
 	public static double AreaPoligonoGauss(Vetor[] vertices) {
-		// Fun√ß√£o usando a Form√∫la da √Årea de Gauss / Form√∫la Shoelace
+		// FunÁ„o usando a FÛrmula da ¡rea de Gauss / FÛrmula Shoelace
 		
         double somaDeterminantes = 0.0;
         int n = vertices.length;

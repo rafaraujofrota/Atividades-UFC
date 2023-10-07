@@ -11,10 +11,10 @@ public class Plano {
 	
 	public Plano(int quantidadeDePlanetas) throws Exception {
 		if(quantidadeDePlanetas < 1) throw new Exception("Valor mÃ­nimo Ã© 1");
-		// O Mais 1 Ã© para poder botar a Estrela
+		// O Mais 1 é para poder botar a Estrela
 		int tamanho = (quantidadeDePlanetas * 2) + 1;
 		this.tamanho = tamanho;
-		// PosiÃ§Ã£o central da Matriz Ã© igual a quantidade porque array comeÃ§a do 0
+		// Posição central da Matriz é igual a quantidade porque array começa do 0
 		centro = quantidadeDePlanetas;
 		pontos = new Astro[tamanho][tamanho];
 		
@@ -24,14 +24,14 @@ public class Plano {
 		Adicionar(Estrela);
 	}
 	
-	// nessas funcoes o y vem antes do x porque pontos Ã© uma Matriz
-	// entÃ£o em pontos[i][j] i = linha e j = coluna
+	// nessas funcoes o y vem antes do x porque pontos é uma Matriz
+	// então em pontos[i][j] i = linha e j = coluna
 	
 	public void Adicionar(Astro novoAstro) {
 		Vetor vet = novoAstro.pegarPosicao();
 		Astro antigo = PegarAstro(vet);
 		
-		// Se estÃ¡ livre entÃ£o adiciona sem checar
+		// Se estão livre então adiciona sem checar
 		if(antigo == null) {
 			pontos[vet.y][vet.x] = novoAstro;
 			return;
@@ -48,8 +48,8 @@ public class Plano {
 			pontos[vet.y][vet.x] = novoAstro;
 		} 
 		
-		// Bugs e devs sÃ³ podem ser adicionados se o espaÃ§o for null
-		// Planetas e Estrelas nÃ£o podem ser sobescritos
+		// Bugs e devs só podem ser adicionados se o espaço for null
+		// Planetas e Estrelas não podem ser sobescritos
 	}
 	
 	public Astro PegarAstro(Vetor vet) {
@@ -65,7 +65,7 @@ public class Plano {
 	}
 	
 	public void Renderizar() {	
-		String Resetar = "\u001B[0m";  // Resetar para a cor padrÃ£o
+		String Resetar = "\u001B[0m";  // Resetar para a cor padrão
 	    String Vermelho = "\u001B[31m";  
 	    String Verde = "\u001B[32m"; 
 	    String Amarelo = "\u001B[33m";
@@ -75,7 +75,7 @@ public class Plano {
             for (int j = 0; j < pontos[i].length; j++) {
                 if (pontos[i][j] != null) {
                 	
-                	// Cores, talvez estrague tudo em terminais antigos
+                	// Cores. Pode dar problemas em algums terminais antigos
                 	if(pontos[i][j].pegarTipo() == Astro.categorias.DEV) {
                 		System.out.print(Verde);
                 	}
@@ -83,10 +83,10 @@ public class Plano {
                 		System.out.print(Vermelho);
                 	}
                 	if(pontos[i][j].pegarTipo() == Astro.categorias.ESTRELA) {
-                		System.out.print(Amarelo);
+                		System.out.print(Azul);
                 	}
                 	if(pontos[i][j].pegarTipo() == Astro.categorias.PLANETA) {
-                		System.out.print(Azul);
+                		System.out.print(Amarelo);
                 	}
                 	
                     System.out.print(pontos[i][j].pegarIcone() + " " + Resetar);

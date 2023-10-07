@@ -61,9 +61,9 @@ public final class Observador {
 			if(p == null) continue;
 			
 			System.out.print(p.pegarNome() + " => Velocidade Atual = " + p.velocidade);
-			System.out.print(", Media = " + p.velocidadeMedia);
+			System.out.print(", Média = " + p.velocidadeMedia);
 			if(mostrarRotacao) {
-				System.out.print(", Rotacao = " + p.pegarRotacao());
+				System.out.print(", Rotação = " + p.pegarRotacao());
 			}
 			System.out.println();
 		}
@@ -148,23 +148,23 @@ public final class Observador {
 		}
 		
 		for(int i = 0; i < planetas.length - 1; i++) {
-			System.out.println("De " + planetas[i].pegarNome() + " Ate " + planetas[i + 1].pegarNome());
+			System.out.println("De " + planetas[i].pegarNome() + " Até " + planetas[i + 1].pegarNome());
 			
-			System.out.println("Area = " + Vetor.AreaQuadrado(vertices[i], vertices[i + 1]));
-			System.out.println("Distancia = " + Vetor.Distancia(vertices[i], vertices[i + 1]));
+			System.out.println("Área = " + Vetor.AreaQuadrado(vertices[i], vertices[i + 1]));
+			System.out.println("Distância = " + Vetor.Distancia(vertices[i], vertices[i + 1]));
 		}
 		
 		System.out.println();
 		
 		if(planetas.length < 3) {
-			System.out.println("Nao eh possivel formar um Poligono com os Planetas Disponiveis");
-		} else System.out.println("Area do Poligono = " + Vetor.AreaPoligonoGauss(vertices));
+			System.out.println("Nao é possível formar um Polígono com os Planetas Disponíveis");
+		} else System.out.println("Área do Polígono = " + Vetor.AreaPoligonoGauss(vertices));
 		
 	}	
 	
 	public void imprimirRelatorioFinal() {
 		imprimirVelocidade(true, false);
-		System.out.println("Dados sobre a Rotacao\n");
+		System.out.println("Dados sobre a Rotação\n");
 		imprimirHoras(0, false);
 		
 		ArrayList<Planeta> mortos = new ArrayList<>();
@@ -175,12 +175,12 @@ public final class Observador {
 			if(p.velocidade <= 0) mortos.add(p);
 			
 			System.out.println(p.descricao);
-			System.out.println("Colisoes Dev: " + p.colisoes[0]);
-			System.out.println("Colisoes Glitchs: " + p.colisoes[1]);
+			System.out.println("Colisões Dev: " + p.colisoes[0]);
+			System.out.println("Colisões Glitchs: " + p.colisoes[1]);
 			System.out.println();
 		}
 		
-		System.out.println("Planetas Destruidos");
+		System.out.println("Planetas Destruídos");
 		if(mortos.size() > 0) {
 			for(Planeta p : mortos) {
 				System.out.println(p.pegarNome());

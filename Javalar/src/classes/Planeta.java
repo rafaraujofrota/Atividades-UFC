@@ -10,13 +10,13 @@ public class Planeta extends Astro {
 	// A cada unidade de tempo o planeta passa sua rotacao em horas, 24 = 1 dia do planeta
 	private double rotacao;
 	
-	// distancia √© o lado do quadrado que o planeta far√° no seu movimento
+	// distancia È o lado do quadrado que o planeta far√° no seu movimento
 	private int distancia;
 	private int movimentosVolta;
 	public String descricao;
 	private String nome;
 	
-	// Atributos da simula√ß√£o
+	// Atributos da simulaÁ„o
 	public double velocidadeMedia;
 	public int distanciaPercorrida;
 	public int tempoSobrevivido;
@@ -63,14 +63,14 @@ public class Planeta extends Astro {
 		int xBase = inicio.x;
 		int yBase = inicio.y;
 		
-		// Distancia do centro at√© um canto;
+		// Distancia do centro atÈ um canto;
 		int dCentro = (distancia - 1) / 2;
 		
-		// checar se deu alguma volta para deixar o programa mais r√°pido
+		// checar se deu alguma volta para deixar o programa mais r·pido
 		int movimento = (tempo * velocidade) % (movimentosVolta);
 		
 		// Pega o y do lado de cima e baixo, e o x do lado esquerdo e direito;
-		// Lembrar que o y = 0 √© o topo, entao para abaixar precisa somar
+		// Lembrar que o y = 0 È o topo, entao para abaixar precisa somar
 		int[] cantos = {yBase, xBase - dCentro, yBase + distancia - 1, xBase + dCentro};
 		
 		int x = posicao.x;

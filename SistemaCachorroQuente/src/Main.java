@@ -1,8 +1,15 @@
 import java.util.Scanner;
 
+import classes.CachorroQuente;
+import classes.Cliente;
+import classes.Igredientes;
+import controller.Cadastrador;
+import controller.Venda;
+
 public class Main {
 	
 	private static Scanner Entrada = new Scanner(System.in);
+	private static Cadastrador Registro = new Cadastrador();
 
 	public static void MostrarOpcoes(String texto, Enum<?>[] itens) {	
 		System.out.println(texto);
@@ -11,75 +18,49 @@ public class Main {
 		}
 	}
 	
-	// Fun√ß√£o para corrigir problema do NextInt Pular o NextLine
-	public static int ScanearInt() {
-		int num = Entrada.nextInt();
-		Entrada.nextLine();
-		return num;
-	}
-	
-	public static void Cadastrar() {
-		System.out.println("Insira seu nome: ");
-		String nome = Entrada.nextLine();
-		System.out.println("Insira sua matricula: ");
-		int matricula = ScanearInt();
-		
-		if(Aluno.PegarTotalAlunos() == 0 || Aluno.PegarAlunoPorMatricula(matricula) != null) {
-			new Aluno(nome, matricula);
-			System.out.println("Cadastrado com Sucesso");
-		} else {
-			System.out.println("Aluno j√° existe, tente novamente");
-		}
-		
-	}
-	
 	public static int ValidarOpcao(int opcao, int max) {
 		if(opcao < 0 || opcao >= max) return 0;
 		else return opcao;
 	}
 	
 	public static void Comprar() {
-		// tentei usar esse metodo com Enums pois seria poss√≠vel aumentar a quantidade de itens 
-		// sem mudar nada no c√≥digo
+		System.out.println("Digite seu Indentificador");
+		int matricula = Entrada.nextInt();
+		Cliente cliente = Registro.PegarCliente(matricula);
 		
-		System.out.println("Digite sua Matricula");
-		int matricula = ScanearInt();
-		Aluno Cliente = Aluno.PegarAlunoPorMatricula(matricula);
-		
-		if(Cliente == null) {
-			System.out.println("Matricula inv√°lida ou n√£o cadastrada");
+		if(cliente == null) {
+			System.out.println("Indentificador inv·lido ou n„o cadastrado");
 			return;
 		}
 		
-		System.out.println("Quantos Cachorros Quentes voc√™ vai querer?");
-		int quantidaDeCachorros = ValidarOpcao(ScanearInt(), 100);
+		System.out.println("Quantos Cachorros Quentes vocÍ vai querer?");
+		int quantidaDeCachorros = ValidarOpcao(Entrada.nextInt(), 100);
 		if(quantidaDeCachorros == 0) return;
 		
-		Enum<CachorroQuente.proteinas>[] proteinas = CachorroQuente.proteinas.values();
-		Enum<CachorroQuente.queijos>[] queijos = CachorroQuente.queijos.values();
-		Enum<CachorroQuente.adicionais>[] adicionais = CachorroQuente.adicionais.values();
-		Enum<Extras.bebidas>[] bebidas = Extras.bebidas.values();
+		Igredientes.Proteina[] proteinas = Igredientes.Proteina.values();
+		Igredientes.Queijos[] queijos = Igredientes.Queijos.values();
+		Igredientes.Adicionais[] adicionais = Igredientes.Adicionais.values();
+		Igredientes.Bebidas[] bebidas = Igredientes.Bebidas.values();
 		
 		int[] op = {0, 0, 0};
 		CachorroQuente[] Produtos = new CachorroQuente[quantidaDeCachorros];
 		
 		for(int i = 0; i < quantidaDeCachorros; i++) {
-			MostrarOpcoes("Escolha a Proteina", proteinas);
-			op[0] = ValidarOpcao(ScanearInt(), proteinas.length);
+			MostrarOpcoes("Escolha a ProteÌna", proteinas);
+			op[0] = ValidarOpcao(Entrada.nextInt(), proteinas.length);
 			
 			MostrarOpcoes("Escolha o Queijo", queijos);
-			op[1] = ValidarOpcao(ScanearInt(), queijos.length);
+			op[1] = ValidarOpcao(Entrada.nextInt(), queijos.length);
 
-			
 			MostrarOpcoes("Escolha os adicionais", adicionais);
 			System.out.println("Digite a quantidade de Adicionais, Max: " + adicionais.length);
-			int quantidadeAdicionais = ValidarOpcao(ScanearInt(), adicionais.length + 1);
+			int quantidadeAdicionais = ValidarOpcao(Entrada.nextInt(), adicionais.length + 1);
 			
-			Enum<CachorroQuente.adicionais>[] adicionaisEscolhidos = new Enum[quantidadeAdicionais];
+			Igredientes.Adicionais[] adicionaisEscolhidos = new Igredientes.Adicionais[quantidadeAdicionais];
 			
 			for(int j = 0; j < quantidadeAdicionais; j++) {
-				System.out.println("Escolha a op√ß√£o N" + (j + 1));
-				int opcao = ValidarOpcao(ScanearInt(), adicionais.length);
+				System.out.println("Escolha a opÁ„o N" + (j + 1));
+				int opcao = ValidarOpcao(Entrada.nextInt(), adicionais.length);
 				adicionaisEscolhidos[j] = adicionais[opcao];
 			}
 			
@@ -87,10 +68,9 @@ public class Main {
 		}
 		
 		MostrarOpcoes("Escolha as Bebidas", bebidas);
-		op[2] = ValidarOpcao(ScanearInt(), bebidas.length);
-		Extras Bebida = new Extras(bebidas[op[2]]);
+		op[2] = ValidarOpcao(Entrada.nextInt(), bebidas.length);
 		
-		Venda NovaVenda = new Venda(Cliente, Produtos, Bebida);
+		Venda NovaVenda = new Venda(cliente, Produtos, bebidas[op[2]]);
 		System.out.println("Nova Venda Efetuada, Imprimindo Recibo");
 		NovaVenda.ImprimirRecibo();
 	}
@@ -99,20 +79,28 @@ public class Main {
 		boolean fechar = false;
 		
 		while(!fechar) {
-			int numAlunos = Aluno.PegarTotalAlunos();
-			System.out.println("Alunos Cadastrados: " + numAlunos);
+			int numClientes = Registro.PegarTotal();
+			System.out.println("Clientes cadastrados: " + numClientes);
 			System.out.println("0-Fechar");
-			System.out.println("1-Cadastrar Alunos");
-			if(numAlunos > 0) System.out.println("2-Comprar");
+			System.out.println("1-Cadastrar");
+			if(numClientes > 0) System.out.println("2-Comprar");
 			
-			int opcao = ScanearInt();
+			int opcao = Entrada.nextInt();
+			Entrada.nextLine();
 			
 			if(opcao == 0) fechar = true;
-			else if(opcao == 1) Cadastrar();
-			else if(opcao == 2 && numAlunos > 0) Comprar();
-			else System.out.println("Op√ß√£o Inv√°lida, tente novamente");
+			else if(opcao == 1) Registro.Cadastrar(Entrada);
+			else if(opcao == 2 && numClientes > 0) Comprar();
+			else System.out.println("OpÁ„o Inv·lida, tente novamente");
 			
 		}
+		
+		System.out.println("Cachorros Quentes vendidos: " + Venda.cachorrosVendidos);
+		System.out.println("Valor arrecadado: " + Venda.totalArrecadado());
+		System.out.println("Valor descontado: " + Venda.totalDesconto());
+		Venda.cachorrosPorCliente();
+		Venda.bebidaMaisVendida();
+		Venda.tipoMaisVendido();
 	}
 
 }

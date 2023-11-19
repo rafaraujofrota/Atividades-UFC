@@ -10,7 +10,7 @@ public class Planeta extends Astro {
 	// A cada unidade de tempo o planeta passa sua rotacao em horas, 24 = 1 dia do planeta
 	private double rotacao;
 	
-	// distancia È o lado do quadrado que o planeta far√° no seu movimento
+	// distancia È o lado do quadrado que o planeta far· no seu movimento
 	private int distancia;
 	private int movimentosVolta;
 	public String descricao;

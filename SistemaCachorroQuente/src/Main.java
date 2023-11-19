@@ -4,6 +4,7 @@ import classes.CachorroQuente;
 import classes.Cliente;
 import classes.Igredientes;
 import controller.Cadastrador;
+import controller.Conexao;
 import controller.Venda;
 
 public class Main {
@@ -77,6 +78,8 @@ public class Main {
 	
 	public static void main(String[] args) {
 		boolean fechar = false;
+		
+		Conexao teste = new Conexao();
 		
 		while(!fechar) {
 			int numClientes = Registro.PegarTotal();

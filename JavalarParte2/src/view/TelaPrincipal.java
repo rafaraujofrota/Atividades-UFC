@@ -12,9 +12,12 @@ import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import classes.Plano;
 import controllers.GerenciadorSimulacao;
@@ -129,11 +132,33 @@ public class TelaPrincipal extends JFrame{
 	}
 	
 	private void Botao1() {
-		AtualizarPlano();
+		try {
+			controle.PassaTempoArquivo();
+			AtualizarPlano();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Fica de Olho", JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 	
 	private void Botao2() {
-		System.out.println("Funfa");
+		JFileChooser JanelaArquivo = new JFileChooser();
+		JanelaArquivo.setFileFilter(new FileNameExtensionFilter("Arquivos CSV", "csv"));
+		
+		int resultado = JanelaArquivo.showOpenDialog(null);
+		if( resultado == JFileChooser.APPROVE_OPTION) {
+			File arquivo = JanelaArquivo.getSelectedFile();
+			controle.DefinirArquivo(arquivo.getAbsolutePath());
+
+			// Resetar
+			try {
+				controle.DefinirPlano(new Plano(7));
+				controle.povoarComPlanetasBasicos();
+				AtualizarPlano();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		} 
 	}
 	
 	private void Botao3() {

@@ -35,7 +35,7 @@ public class Javalar {
 		boolean acabou = false;
 		
 		// Teste Janela
-			new TelaPrincipal(Simulacao.PegarTamanho() + 1);
+			new TelaPrincipal(Gerenciador);
 		//
 		
 		System.out.println("************************");

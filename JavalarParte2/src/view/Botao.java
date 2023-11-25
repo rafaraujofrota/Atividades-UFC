@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -15,8 +16,10 @@ public class Botao extends JPanel implements MouseListener {
 
 	JLabel seta_esquerda;
 	JLabel seta_direita;
+	Runnable funcao;
 	
-	public Botao(Font fonte, String texto) {
+	public Botao(Font fonte, String texto, Runnable funcao) {
+		this.funcao = funcao;
 		setLayout(new BorderLayout());
 		setOpaque(false);
 		
@@ -38,6 +41,7 @@ public class Botao extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		funcao.run();
 	}
 
 	@Override

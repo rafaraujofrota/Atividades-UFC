@@ -1,5 +1,6 @@
 package controllers;
 
+import java.io.File;
 import java.util.Random;
 
 import classes.Planeta;
@@ -10,6 +11,7 @@ import utils.Vetor;
 public class GerenciadorSimulacao {
 	private Planeta[] planetasAtivos;
 	private Plano plano;
+	private File ArquivoInstantes;
 	
 	private int unidadesTotais;
 	private int numeroExecucoes;
@@ -22,6 +24,10 @@ public class GerenciadorSimulacao {
 	
 	public int PegarUnidadesTotais() {
 		return unidadesTotais;
+	}
+	
+	public Plano PegarPlano() {
+		return plano;
 	}
 	
 	public int PegarNumeroExecucoes() {

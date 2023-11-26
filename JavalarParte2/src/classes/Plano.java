@@ -24,6 +24,41 @@ public class Plano {
 		Adicionar(Estrela);
 	}
 	
+	public int[] PegarModificadoresPorQuadrante(boolean bug) {
+		Enum<Astro.categorias> tipo = bug ? Astro.categorias.GLITCH : Astro.categorias.DEV;
+		int[] quantidade = new int[4];
+		
+		// Quadrante 1
+		for(int i = 0; i < centro; i++) {
+			for(int j = 0; j < centro; j++) {
+				if(pontos[i][j] != null && pontos[i][j].pegarTipo() == tipo) quantidade[0] += 1;
+			}
+		}
+		
+		// Quadrante 2
+		for(int i = 0; i < centro; i++) {
+			for(int j = centro + 1; j < tamanho; j++) {
+				if(pontos[i][j] != null && pontos[i][j].pegarTipo() == tipo) quantidade[1] += 1;		
+			}
+		}
+		
+		// Quadrante 3
+		for(int i = centro + 1; i < tamanho; i++) {
+			for(int j = 0; j < centro; j++) {
+				if(pontos[i][j] != null && pontos[i][j].pegarTipo() == tipo) quantidade[2] += 1;		
+			}
+		}
+				
+		// Quadrante 4
+		for(int i = centro + 1; i < tamanho; i++) {
+			for(int j = centro + 1; j < tamanho; j++) {
+				if(pontos[i][j] != null && pontos[i][j].pegarTipo() == tipo) quantidade[3] += 1;		
+			}
+		}
+			
+		return quantidade;
+	}
+	
 	// nessas funcoes o y vem antes do x porque pontos é uma Matriz
 	// então em pontos[i][j] i = linha e j = coluna
 	

@@ -21,6 +21,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import classes.Plano;
 import controllers.GerenciadorSimulacao;
+import controllers.RelatorioDAO;
 import utils.Astro;
 import utils.Vetor;
 
@@ -148,25 +149,34 @@ public class TelaPrincipal extends JFrame{
 		if( resultado == JFileChooser.APPROVE_OPTION) {
 			File arquivo = JanelaArquivo.getSelectedFile();
 			controle.DefinirArquivo(arquivo.getAbsolutePath());
-
-			// Resetar
-			try {
-				controle.DefinirPlano(new Plano(7));
-				controle.povoarComPlanetasBasicos();
-				AtualizarPlano();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
+			controle.ResetarPlano();
+			AtualizarPlano();
 		} 
 	}
 	
 	private void Botao3() {
-		System.out.println("Funfa");
+		if(controle.PegarNomeArquivo() == null) {
+			JOptionPane.showMessageDialog(null, "Você ainda não iniciou o programa" ,"Sem Arquivo", JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			RelatorioDAO relatorioDAO = new RelatorioDAO();
+			try {
+				relatorioDAO.Criar(controle.PegarPlanetasAtivos(), controle.PegarPlano(), controle.PegarNomeArquivo());
+				JOptionPane.showMessageDialog(null, "Deu Bom", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+			} 
+			catch (Exception e) {
+				JOptionPane.showMessageDialog(null, e.getMessage(), "Deu Ruim", JOptionPane.ERROR_MESSAGE);
+			}
+		}	
 	}
 	
 	private void Botao4() {
-		System.out.println("Funfa");
+		RelatorioDAO relatorioDAO = new RelatorioDAO();
+		try {
+			relatorioDAO.PegarTodos();
+			JOptionPane.showMessageDialog(null, "Deu Bom", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Deu Ruim", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	private void Botao5() {

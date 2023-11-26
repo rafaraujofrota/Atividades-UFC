@@ -1,6 +1,5 @@
 import java.util.Scanner;
 
-import classes.Planeta;
 import classes.Plano;
 import controllers.GerenciadorSimulacao;
 import utils.Observador;

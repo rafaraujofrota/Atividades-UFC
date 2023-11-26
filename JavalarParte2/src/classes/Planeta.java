@@ -41,6 +41,14 @@ public class Planeta extends Astro {
 		return this.nome;
 	}
 	
+	public Double pegarHoras() {
+		return rotacao * tempoSobrevivido;
+	}
+	
+	public Double pegarAnos() {
+		return (double) (distanciaPercorrida / movimentosVolta);
+	}
+	
 	public double pegarRotacao() {
 		return this.rotacao;
 	}

@@ -23,6 +23,9 @@ public final class Observador {
 		return vivos.toArray(vivosArray);
 	}
 	
+	// Essas funções estão ultrapassadas, já que Planetas recebeu novas funções
+	// Mesmo assim, isso só é usado no modo console e fazem a mesma coisa, então não há problema
+	
 	public void imprimirHoras(int tempo, boolean apenasVivos) {
 		Planeta[] planetas = apenasVivos ? pegarPlanetasVivos() : lista;
 		

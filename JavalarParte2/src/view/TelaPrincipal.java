@@ -3,7 +3,6 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GridLayout;
@@ -20,9 +19,11 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import classes.Plano;
+import classes.Relatorio;
 import controllers.GerenciadorSimulacao;
 import controllers.RelatorioDAO;
 import utils.Astro;
+import utils.AnalisadorDados;
 import utils.Vetor;
 
 public class TelaPrincipal extends JFrame{
@@ -30,6 +31,7 @@ public class TelaPrincipal extends JFrame{
 	private Font fonte;
 	private JLabel[][] espacos;
 	private GerenciadorSimulacao controle;
+	private JLabel loading;
 	
 	public TelaPrincipal(GerenciadorSimulacao controle) {
 		setTitle("Javalar Parte 2");
@@ -82,13 +84,15 @@ public class TelaPrincipal extends JFrame{
         JPanel BotoesBanco = new JPanel(new GridLayout(3, 1));
         BotoesBanco.setOpaque(false);
         
-      
+        loading = new JLabel(new ImageIcon("imagens/loading.gif"));
+        loading.setVisible(false);
+        
         BotoesPrincipais.add(new Botao(fonte, "Processar Novo Instante", () -> Botao1()));
         BotoesPrincipais.add(new Botao(fonte, "Ler Arquivo de Entrada", () -> Botao2()));
         BotoesPrincipais.add(new Botao(fonte, "Gravar Novo Relatório", () -> Botao3()));
         BotoesBanco.add(new Botao(fonte, "Ler os Dados do Banco", () -> Botao4()));
         BotoesBanco.add(new Botao(fonte, "Gravar Arquivo de Saída", () -> Botao5()));
-        
+        BotoesBanco.add(loading);
         
         Opcoes.add(BotoesPrincipais);
         Opcoes.add(BotoesBanco);
@@ -157,29 +161,52 @@ public class TelaPrincipal extends JFrame{
 	private void Botao3() {
 		if(controle.PegarNomeArquivo() == null) {
 			JOptionPane.showMessageDialog(null, "Você ainda não iniciou o programa" ,"Sem Arquivo", JOptionPane.INFORMATION_MESSAGE);
-		} else {
-			RelatorioDAO relatorioDAO = new RelatorioDAO();
+			return;
+		} 
+		
+		loading.setVisible(true);
+		
+		Thread requisicao = new Thread(() -> {
 			try {
+				RelatorioDAO relatorioDAO = new RelatorioDAO();
 				relatorioDAO.Criar(controle.PegarPlanetasAtivos(), controle.PegarPlano(), controle.PegarNomeArquivo());
 				JOptionPane.showMessageDialog(null, "Deu Bom", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-			} 
-			catch (Exception e) {
+			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, e.getMessage(), "Deu Ruim", JOptionPane.ERROR_MESSAGE);
+			} finally {
+				loading.setVisible(false);
 			}
-		}	
+		});
+			
+		requisicao.start();
 	}
 	
 	private void Botao4() {
-		RelatorioDAO relatorioDAO = new RelatorioDAO();
+		loading.setVisible(true);
+		
+		Thread requisicao = new Thread(() -> {
+			try {
+				RelatorioDAO relatorioDAO = new RelatorioDAO();
+				relatorioDAO.PegarTodos();
+				JOptionPane.showMessageDialog(null, "Deu Bom", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, e.getMessage(), "Deu Ruim", JOptionPane.ERROR_MESSAGE);
+			} finally {
+				loading.setVisible(false);
+			}
+		});
+		
+		requisicao.start();
+	}
+	
+	private void Botao5() {
 		try {
-			relatorioDAO.PegarTodos();
-			JOptionPane.showMessageDialog(null, "Deu Bom", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+			AnalisadorDados Gerador = new AnalisadorDados(Relatorio.ListaRelatorios);
+			// Terminar de Fazer a "Telinha" para escolher o Arquivo e salvar.
+			System.out.println(Gerador.PegarResumo());
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Deu Ruim", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
-	private void Botao5() {
-		System.out.println("Funfa");
-	}
 }

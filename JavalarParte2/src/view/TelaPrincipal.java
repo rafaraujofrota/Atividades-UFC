@@ -6,7 +6,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GridLayout;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.swing.BorderFactory;
@@ -87,11 +89,11 @@ public class TelaPrincipal extends JFrame{
         loading = new JLabel(new ImageIcon("imagens/loading.gif"));
         loading.setVisible(false);
         
-        BotoesPrincipais.add(new Botao(fonte, "Processar Novo Instante", () -> Botao1()));
-        BotoesPrincipais.add(new Botao(fonte, "Ler Arquivo de Entrada", () -> Botao2()));
-        BotoesPrincipais.add(new Botao(fonte, "Gravar Novo Relatório", () -> Botao3()));
-        BotoesBanco.add(new Botao(fonte, "Ler os Dados do Banco", () -> Botao4()));
-        BotoesBanco.add(new Botao(fonte, "Gravar Arquivo de Saída", () -> Botao5()));
+        BotoesPrincipais.add(new Botao(fonte, "Processar Novo Instante", () -> BotaoProcessar()));
+        BotoesPrincipais.add(new Botao(fonte, "Ler Arquivo de Entrada", () -> BotaoLer()));
+        BotoesPrincipais.add(new Botao(fonte, "Gravar Novo Relatório", () -> BotaoGravar()));
+        BotoesBanco.add(new Botao(fonte, "Ler os Dados do Banco", () -> BotaoBuscar()));
+        BotoesBanco.add(new Botao(fonte, "Gravar Arquivo de Saída", () -> BotaoSalvar()));
         BotoesBanco.add(loading);
         
         Opcoes.add(BotoesPrincipais);
@@ -136,7 +138,7 @@ public class TelaPrincipal extends JFrame{
 		
 	}
 	
-	private void Botao1() {
+	private void BotaoProcessar() {
 		try {
 			controle.PassaTempoArquivo();
 			AtualizarPlano();
@@ -145,7 +147,7 @@ public class TelaPrincipal extends JFrame{
 		}
 	}
 	
-	private void Botao2() {
+	private void BotaoLer() {
 		JFileChooser JanelaArquivo = new JFileChooser();
 		JanelaArquivo.setFileFilter(new FileNameExtensionFilter("Arquivos CSV", "csv"));
 		
@@ -158,7 +160,7 @@ public class TelaPrincipal extends JFrame{
 		} 
 	}
 	
-	private void Botao3() {
+	private void BotaoGravar() {
 		if(controle.PegarNomeArquivo() == null) {
 			JOptionPane.showMessageDialog(null, "Você ainda não iniciou o programa" ,"Sem Arquivo", JOptionPane.INFORMATION_MESSAGE);
 			return;
@@ -170,6 +172,7 @@ public class TelaPrincipal extends JFrame{
 			try {
 				RelatorioDAO relatorioDAO = new RelatorioDAO();
 				relatorioDAO.Criar(controle.PegarPlanetasAtivos(), controle.PegarPlano(), controle.PegarNomeArquivo());
+				loading.setVisible(false);
 				JOptionPane.showMessageDialog(null, "Deu Bom", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, e.getMessage(), "Deu Ruim", JOptionPane.ERROR_MESSAGE);
@@ -181,13 +184,14 @@ public class TelaPrincipal extends JFrame{
 		requisicao.start();
 	}
 	
-	private void Botao4() {
+	private void BotaoBuscar() {
 		loading.setVisible(true);
 		
 		Thread requisicao = new Thread(() -> {
 			try {
 				RelatorioDAO relatorioDAO = new RelatorioDAO();
 				relatorioDAO.PegarTodos();
+				loading.setVisible(false);
 				JOptionPane.showMessageDialog(null, "Deu Bom", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, e.getMessage(), "Deu Ruim", JOptionPane.ERROR_MESSAGE);
@@ -199,14 +203,33 @@ public class TelaPrincipal extends JFrame{
 		requisicao.start();
 	}
 	
-	private void Botao5() {
-		try {
-			AnalisadorDados Gerador = new AnalisadorDados(Relatorio.ListaRelatorios);
-			// Terminar de Fazer a "Telinha" para escolher o Arquivo e salvar.
-			System.out.println(Gerador.PegarResumo());
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage(), "Deu Ruim", JOptionPane.ERROR_MESSAGE);
-		}
+	private void BotaoSalvar() {
+		loading.setVisible(true);
+		
+		Thread salvar = new Thread(() -> {
+			try {
+				AnalisadorDados Gerador = new AnalisadorDados(Relatorio.ListaRelatorios);
+				JFileChooser JanelaArquivo = new JFileChooser();
+				JanelaArquivo.setFileFilter(new FileNameExtensionFilter("Saida", "txt"));
+				
+				int selecao = JanelaArquivo.showSaveDialog(this);
+				
+				if(selecao == JFileChooser.APPROVE_OPTION) {
+					String local = JanelaArquivo.getSelectedFile().getAbsolutePath() + ".txt";
+					
+					BufferedWriter criador = new BufferedWriter(new FileWriter(local));
+					criador.write(Gerador.PegarResumo());
+					criador.close();
+					JOptionPane.showMessageDialog(null, "Deu Bom", "Arquivo Salvo", JOptionPane.INFORMATION_MESSAGE);
+				}
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, e.getMessage(), "Deu Ruim", JOptionPane.ERROR_MESSAGE);
+			} finally {
+				loading.setVisible(false);
+			}
+		});
+		
+		salvar.start();
 	}
 	
 }
